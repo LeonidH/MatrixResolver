@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace LeanidHubar
@@ -8,7 +7,7 @@ namespace LeanidHubar
     {
         private static readonly int _maxMoves = 8;
 
-        private static readonly char[] Vowels = new[] {'A', 'E', 'I', 'O', 'U', 'Y'};
+        private static readonly char[] Vowels = {'A', 'E', 'I', 'O', 'U', 'Y'};
 
         private static readonly int[,] Moves =
         {
@@ -32,46 +31,45 @@ namespace LeanidHubar
                 {'P', 'Q', 'R', 'S', 'T'},
                 {'U', 'V', Char.MinValue, Char.MinValue, 'Y'}
             };
-            
+
             return SolveMatrix(matrix);
         }
 
         public static long SolveMatrix(char[,] matrix)
         {
-            var rows = matrix.GetLength(0);
-            var colums = matrix.GetLength(1);
+            var rowsCount = matrix.GetLength(0);
+            var columnsCount = matrix.GetLength(1);
 
             var count = 0;
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < rowsCount; i++)
             {
-                for (int j = 0; j < colums; j++)
+                for (int j = 0; j < columnsCount; j++)
                 {
-                    var path = new List<char>();
-                    if (BuildPath(i, j, path, 0, matrix))
-                    {
-                        if (path.Count(c => Vowels.Contains(Char.ToUpper(c))) <= 2)
-                        {
-                            count++;
-                        }
-                    }
+                    count += GetUniqPathsCount(i, j, matrix);
                 }
             }
 
             return count;
         }
 
-        private static bool BuildPath(int row, int column, List<char> path, int moveNum, char[,] matrix)
+        private static int GetUniqPathsCount(int row, int column, char[,] matrix, int count = 0, int vowelsCount = 0, int pathLength = 0)
         {
-            if (moveNum >= _maxMoves) return true;
-            
-            moveNum++;
-
             if (matrix[row, column] != Char.MinValue)
             {
-                path.Add(matrix[row, column]);
+                ++pathLength;
+                
+                if (Vowels.Contains(matrix[row, column]))
+                {
+                    ++vowelsCount;
+                }
+                
+                if (pathLength >= _maxMoves)
+                {
+                    return vowelsCount <= 2 ? ++count : count;
+                }
             }
-            else return false;
+            else return count;
 
             for (int i = 0; i < Moves.GetLength(0); i++)
             {
@@ -82,14 +80,11 @@ namespace LeanidHubar
                                  && nextColumn >= 0 && nextColumn < matrix.GetLength(1)
                 )
                 {
-                    if (BuildPath(nextRow, nextColumn, path, moveNum, matrix))
-                    {
-                        return true;
-                    }
+                    count = GetUniqPathsCount(nextRow, nextColumn, matrix, count, vowelsCount, pathLength);
                 }
             }
 
-            return false;
+            return count;
         }
     }
 }

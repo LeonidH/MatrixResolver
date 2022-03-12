@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace LeanidHubar
 {
@@ -7,9 +8,16 @@ namespace LeanidHubar
     {
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            
             foreach (char[,] matrix in GetTestData())
             {
-                LeanidHubar.SolveMatrix(matrix);
+                DateTime start = DateTime.Now;
+                var count = LeanidHubar.SolveMatrix(matrix);
+                DateTime end = DateTime.Now;
+                
+                TimeSpan ts = (end - start);
+                Console.WriteLine($"Paths: {count} - Duration, ms: {ts.TotalMilliseconds}");
             }
         }
 
