@@ -63,7 +63,7 @@ namespace LeanidHubar
 
         private static bool BuildPath(int row, int column, List<char> path, int moveNum, char[,] matrix)
         {
-            if (moveNum == _maxMoves) return true;
+            if (moveNum >= _maxMoves) return true;
             
             moveNum++;
 
