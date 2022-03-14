@@ -18,6 +18,7 @@ namespace LeanidHubar
                 
                 TimeSpan ts = (end - start);
                 Console.WriteLine($"Paths: {count} - Duration, ms: {ts.TotalMilliseconds}");
+                //Console.ReadKey();
             }
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LeanidHubar
@@ -7,7 +8,7 @@ namespace LeanidHubar
     {
         private static readonly int _maxMoves = 8;
 
-        private static readonly char[] Vowels = {'A', 'E', 'I', 'O', 'U', 'Y'};
+        private static readonly HashSet<char> Vowels = new(){'A', 'E', 'I', 'O', 'U', 'Y'};
 
         private static readonly int[,] Moves =
         {
@@ -62,11 +63,16 @@ namespace LeanidHubar
                 if (Vowels.Contains(matrix[row, column]))
                 {
                     ++vowelsCount;
+                    
+                    if (vowelsCount > 2)
+                    {
+                        return count;
+                    }
                 }
                 
                 if (pathLength >= _maxMoves)
                 {
-                    return vowelsCount <= 2 ? ++count : count;
+                    return ++count;
                 }
             }
             else return count;
